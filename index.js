@@ -50,7 +50,6 @@ app.get('/', async (req, res) => {
                         imgs.push(img);
                         //console.log(imgs)
                     });
-
                     
                     const title = $('h1').text();
                     const content = $('p').text()
@@ -59,9 +58,6 @@ app.get('/', async (req, res) => {
                 
             }       
         
-            
-           // const allRapers = rapers.map(raper => `${raper.title}</h2><img src='${raper.imgs.map(img1 => img1)}' alt='${raper.title}'><p>${raper.content}</p></li>`).join('');
-            //const allLinks = links.map(link => `<li><a href='https://es.wikipedia.org/${link}'>${link}</a></li>`).join('');
             console.log(rapers)
             res.json(rapers)
         }
