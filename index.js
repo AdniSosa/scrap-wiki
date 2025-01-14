@@ -39,36 +39,31 @@ app.get('/', async (req, res) => {
             })
 
             for (const element of links) {
-            //links.forEach((element) => {
                 //console.log(element);
                 const linkResponse = await axios.get(`https://es.wikipedia.org/${element}`)
                 if(linkResponse.status === 200) {
                     const html = linkResponse.data;
                     const $ = cheerio.load(html);
+                    
+                    $('img').each((index, element) => {
+                        const img = $(element).attr('src');
+                        imgs.push(img);
+                        //console.log(imgs)
+                    });
 
-                    const imgRapers = $('#bodyContent img').attr('src');
-                    imgs.push(imgRapers);
-
-                    const raper = {
-                        title : $('h1').text(),
-                        img : $('.imagen img').attr('src'),
-                        content : $('p').text()
-                    }
-                    rapers.push(raper);
-                    //console.log(imgRapers)    ;
-                }       
-            }
-
-            const allRapers = rapers.map(raper => `<li><h2>${raper.title}</h2><img src='${raper.img}' alt='${raper.title}'><p>${raper.content}</p></li>`).join('');
-            //const allLinks = links.map(link => `<li><a href='https://es.wikipedia.org/${link}'>${link}</a></li>`).join('');
-            //console.log(rapers)
-            res.send(`
-                <h1>${pageTitle}</h1>
-                <ul>
-                    ${allRapers}
-                </ul>
-            `)
+                    
+                    const title = $('h1').text();
+                    const content = $('p').text()
+                    rapers.push({title, imgs, content});
+                }
+                
+            }       
         
+            
+           // const allRapers = rapers.map(raper => `${raper.title}</h2><img src='${raper.imgs.map(img1 => img1)}' alt='${raper.title}'><p>${raper.content}</p></li>`).join('');
+            //const allLinks = links.map(link => `<li><a href='https://es.wikipedia.org/${link}'>${link}</a></li>`).join('');
+            console.log(rapers)
+            res.json(rapers)
         }
     }catch (error) {
         console.log('Error al obtener los datos', error)
